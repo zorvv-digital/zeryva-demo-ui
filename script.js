@@ -68,7 +68,10 @@ function sendMessage() {
   // Add my message
   const myMessageHtml = `
     <div class="message-box my-message" style="opacity: 0; transform: translateY(10px); animation: fadeIn 0.3s forwards;">
-      <p>${text}<br><span>${getCurrentTime()}</span></p>
+      <div class="msg-bubble">
+        ${marked.parse(text)}
+        <span class="msg-time">${getCurrentTime()}</span>
+      </div>
     </div>
   `;
   chatContainer.insertAdjacentHTML('beforeend', myMessageHtml);
@@ -91,9 +94,11 @@ async function receiveReply(originalMessage) {
   const typingId = 'typing-' + Date.now();
   const typingHtml = `
     <div class="message-box friend-message" id="${typingId}" style="opacity: 0; transform: translateY(10px); animation: fadeIn 0.3s forwards;">
-      <p class="typing-indicator">
-        <span></span><span></span><span></span>
-      </p>
+      <div class="msg-bubble">
+        <div class="typing-indicator">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
     </div>
   `;
   chatContainer.insertAdjacentHTML('beforeend', typingHtml);
@@ -130,7 +135,10 @@ async function receiveReply(originalMessage) {
 
   const friendMessageHtml = `
     <div class="message-box friend-message" style="opacity: 0; transform: translateY(10px); animation: fadeIn 0.3s forwards;">
-      <p>${responseText}<br><span>${getCurrentTime()}</span></p>
+      <div class="msg-bubble">
+        ${marked.parse(responseText)}
+        <span class="msg-time">${getCurrentTime()}</span>
+      </div>
     </div>
   `;
   chatContainer.insertAdjacentHTML('beforeend', friendMessageHtml);

@@ -125,7 +125,7 @@ body {
   position: relative;
 }
 
-.message-box p {
+.message-box .msg-bubble {
   padding: 8px 10px 8px 10px;
   border-radius: 7.5px;
   font-size: 0.95rem;
@@ -135,11 +135,23 @@ body {
   word-wrap: break-word;
 }
 
-.message-box p span {
+.message-box .msg-bubble p {
+  margin-bottom: 5px;
+}
+.message-box .msg-bubble p:last-child {
+  margin-bottom: 0;
+}
+
+.message-box .msg-bubble ul, .message-box .msg-bubble ol {
+  margin-left: 20px;
+  margin-bottom: 5px;
+}
+
+.message-box .msg-bubble .msg-time {
   font-size: 0.65rem;
   color: rgba(0, 0, 0, 0.45);
   float: right;
-  margin-top: 10px;
+  margin-top: 5px;
   margin-left: 10px;
 }
 
@@ -147,12 +159,12 @@ body {
   align-self: flex-start;
 }
 
-.friend-message p {
+.friend-message .msg-bubble {
   background-color: white;
   border-top-left-radius: 0;
 }
 
-.friend-message p::before {
+.friend-message .msg-bubble::before {
   content: '';
   position: absolute;
   top: 0;
@@ -166,12 +178,12 @@ body {
   align-self: flex-end;
 }
 
-.my-message p {
+.my-message .msg-bubble {
   background-color: #d9fdd3;
   border-top-right-radius: 0;
 }
 
-.my-message p::before {
+.my-message .msg-bubble::before {
   content: '';
   position: absolute;
   top: 0;
