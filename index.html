@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>WhatsApp</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <div class="mobile-container">
+    <!-- Header -->
+    <div class="header">
+      <div class="header-left">
+        <i class="fa-solid fa-arrow-left" id="back-btn"></i>
+        <div class="user-img">
+          <img class="dp" src="https://images.pexels.com/photos/2474307/pexels-photo-2474307.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Profile Picture">
+        </div>
+        <div class="user-info">
+          <h4>Leo</h4>
+          <span>Online</span>
+        </div>
+      </div>
+      <div class="header-right">
+        <i class="fa-solid fa-video" id="video-call-btn" title="Video Call"></i>
+        <i class="fa-solid fa-phone" id="audio-call-btn" title="Voice Call"></i>
+        <i class="fa-solid fa-ellipsis-vertical"></i>
+      </div>
+    </div>
+
+    <!-- Chat Area -->
+    <div class="chat-container" id="chat-container">
+      <div class="message-box friend-message">
+        <p>Awesome! I'll start a video chat with you in a few.<br><span>07:49</span></p>
+      </div>
+    </div>
+
+    <!-- Input Area -->
+    <div class="chatbox-input">
+      <i class="fa-regular fa-face-grin"></i>
+      <input type="text" id="message-input" placeholder="Message" autocomplete="off">
+      <i class="fa-solid fa-paperclip"></i>
+      <div class="send-btn" id="send-btn">
+        <i class="fa-solid fa-microphone" id="mic-send-icon"></i>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="./script.js"></script>
+</body>
+</html>
