@@ -2,6 +2,29 @@ const messageInput = document.getElementById('message-input');
 const sendBtn = document.getElementById('send-btn');
 const micSendIcon = document.getElementById('mic-send-icon');
 const chatContainer = document.getElementById('chat-container');
+const userDp = document.getElementById('user-dp');
+const userName = document.getElementById('user-name');
+
+const pathSegments = window.location.pathname.split('/').filter(Boolean);
+let projectId = pathSegments.length > 0 ? pathSegments[pathSegments.length - 1] : '';
+
+// Fallback to query parameter if path is just the index file or empty
+if (!projectId || projectId === 'index.html') {
+  const urlParams = new URLSearchParams(window.location.search);
+  projectId = urlParams.get('project_id') || projectId;
+}
+
+console.log("Using Project ID:", projectId);
+
+if (projectId) {
+  fetch(`/api/v1/projects/${projectId}`)
+    .then(res => res.json())
+    .then(data => {
+      if (data.name) userName.textContent = data.name;
+      if (data.image_url) userDp.src = data.image_url;
+    })
+    .catch(err => console.error('Error fetching project:', err));
+}
 
 // Toggle between Mic and Send icon based on input length
 messageInput.addEventListener('input', () => {
@@ -52,28 +75,54 @@ function sendMessage() {
   }, 1000 + Math.random() * 1500);
 }
 
-// Mock receive reply
-function receiveReply(originalMessage) {
-  const replies = [
-    "That's interesting! Tell me more.",
-    "Haha, yeah exactly!",
-    "I'll have to get back to you on that.",
-    "Sounds like a plan.",
-    "Got it.",
-    "Sure thing!",
-    "What do you mean by that?",
-    "Okay!"
-  ];
-  
-  const randomReply = replies[Math.floor(Math.random() * replies.length)];
-  
+// API receive reply
+async function receiveReply(originalMessage) {
+  const typingId = 'typing-' + Date.now();
+  const typingHtml = `
+    <div class="message-box friend-message" id="${typingId}" style="opacity: 0; transform: translateY(10px); animation: fadeIn 0.3s forwards;">
+      <p class="typing-indicator">
+        <span></span><span></span><span></span>
+      </p>
+    </div>
+  `;
+  chatContainer.insertAdjacentHTML('beforeend', typingHtml);
+  scrollToBottom();
+
+  let responseText = "Sorry, I couldn't reach the server right now.";
+  try {
+    if (!projectId || projectId === 'index.html') {
+      console.warn("No project ID found in URL. Cannot call API.");
+      responseText = "Error: Project ID is missing from the URL. Please add ?project_id=YOUR_ID to the URL.";
+    } else {
+      const res = await fetch(`/api/v1/projects/${projectId}/chat`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ message: originalMessage })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.response) {
+          responseText = data.response;
+        }
+      } else {
+        console.error("Backend returned error status:", res.status);
+      }
+    }
+  } catch (error) {
+    console.error('Error sending message:', error);
+  }
+
+  const typingElement = document.getElementById(typingId);
+  if (typingElement) typingElement.remove();
+
   const friendMessageHtml = `
     <div class="message-box friend-message" style="opacity: 0; transform: translateY(10px); animation: fadeIn 0.3s forwards;">
-      <p>${randomReply}<br><span>${getCurrentTime()}</span></p>
+      <p>${responseText}<br><span>${getCurrentTime()}</span></p>
     </div>
   `;
   chatContainer.insertAdjacentHTML('beforeend', friendMessageHtml);
-  
   scrollToBottom();
 }
 
