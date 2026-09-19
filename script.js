@@ -17,11 +17,22 @@ if (!projectId || projectId === 'index.html') {
 console.log("Using Project ID:", projectId);
 
 if (projectId) {
-  fetch(`/api/v1/projects/${projectId}`)
+  fetch(`http://localhost:8000/api/v1/projects/${projectId}`)
     .then(res => res.json())
     .then(data => {
+      console.log("Project data:", data);
       if (data.name) userName.textContent = data.name;
-      if (data.image_url) userDp.src = data.image_url;
+      if (data.image_url) {
+        userDp.onerror = () => {
+          console.error("Failed to load image from URL:", data.image_url);
+        };
+        // Use a CORS proxy to bypass Facebook's Cross-Origin-Resource-Policy blocking
+        if (data.image_url.includes('fbcdn.net')) {
+          userDp.src = 'https://corsproxy.io/?' + encodeURIComponent(data.image_url);
+        } else {
+          userDp.src = data.image_url;
+        }
+      }
     })
     .catch(err => console.error('Error fetching project:', err));
 }
@@ -94,7 +105,7 @@ async function receiveReply(originalMessage) {
       console.warn("No project ID found in URL. Cannot call API.");
       responseText = "Error: Project ID is missing from the URL. Please add ?project_id=YOUR_ID to the URL.";
     } else {
-      const res = await fetch(`/api/v1/projects/${projectId}/chat`, {
+      const res = await fetch(`http://localhost:8000/api/v1/projects/${projectId}/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
